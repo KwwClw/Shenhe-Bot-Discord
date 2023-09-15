@@ -2,3 +2,4 @@
 .env
 config.json
 .env.example
+node_modules/
