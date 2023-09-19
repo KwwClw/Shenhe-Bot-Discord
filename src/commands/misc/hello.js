@@ -13,7 +13,7 @@ module.exports = {
         },
     ],
 
-    callback: async (interaction) => {
+    callback: async (client, interaction) => {
 
         // Get the mentioned user from the interaction
         const mentionedUser = interaction.options.getMentionable('user');
