@@ -12,11 +12,11 @@ let status = [
       url: 'https://open.spotify.com/album/51j1hkKJ7qorRtD3aZMVGG?si=CSb2Ln_9SXK87wfgUKPVPQ',
     },
     {
-      name: 'Custom Status 1',
+      name: 'Metro Boomin',
       type: ActivityType.Watching,
     },
     {
-      name: '4MILL',
+      name: '21Savage',
       type: ActivityType.Listening,
     },
   ]
