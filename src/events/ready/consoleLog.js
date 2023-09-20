@@ -28,6 +28,10 @@ module.exports = (client) => {
       let random = Math.floor(Math.random() * status.length);
       client.user.setActivity(status[random])
     }, 1000);
+
+    client.on('disconnect', (event) => {
+      console.error(`Bot disconnected with code ${event.code} and reason: ${event.reason}`);
+    });
 };
 
 // setInterval(()=> {
