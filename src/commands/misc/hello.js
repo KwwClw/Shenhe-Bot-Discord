@@ -36,7 +36,7 @@ module.exports = {
                     }
             } else {
                 // Handle the case where the interaction is in a DM (no guild)
-                await interaction.reply(`You mentioned: ${mentionedUser.username}`);
+                await interaction.reply(`Hello : ${mentionedUser.username}`);
             }
         } else {
             // Handle the case where no mentionable user was mentioned
