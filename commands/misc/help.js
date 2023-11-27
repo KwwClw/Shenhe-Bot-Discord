@@ -11,7 +11,8 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setColor(0x13a4a6)
         .setTitle('Help')
-        .setDescription('Help Command')
+        .setURL('https://kwwclw.github.io/shenhebot.github.io/')
+        .setDescription('')
         .setThumbnail('https://i.pinimg.com/564x/57/95/03/579503ddd342c1a1891fac0b46434f77.jpg')
         .addFields(
             { name: 'help', value: 'Get help command' },
