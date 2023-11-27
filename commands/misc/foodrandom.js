@@ -1,4 +1,4 @@
-const data = require('../../../data/foodData.json');
+const data = require('../../data/foodData.json');
 const rice = data.rice;
 const noodles = data.noodles;
 
