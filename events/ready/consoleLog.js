@@ -22,7 +22,7 @@ let status = [
   ]
 
 module.exports = (client) => {
-    console.log(`${client.user.tag} is online.`)
+    console.log(`${client.user.tag} is online.\nat ${today.tolocaleString}`)
 
     setInterval(()=> {
       let random = Math.floor(Math.random() * status.length);

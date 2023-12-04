@@ -18,7 +18,7 @@ module.exports = {
             { name: 'namebot', value: 'Name of bot' },
             { name: 'random', value: 'Random number 1 to 50' },
             { name: 'Ping', value: 'Pings the bot and shows the latency' },
-            );
+        );
         interaction.reply({ embeds: [embed] });
     },
   };
