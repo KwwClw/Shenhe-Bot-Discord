@@ -1,4 +1,5 @@
 const { ActivityType } = require('discord.js');
+var datetime = new Date();
 
 let status = [
     {
@@ -22,7 +23,7 @@ let status = [
   ]
 
 module.exports = (client) => {
-    console.log(`${client.user.tag} is online.\nat ${today.tolocaleString}`)
+    console.log(`${client.user.tag} is online.\nat ${datetime}`)
 
     setInterval(()=> {
       let random = Math.floor(Math.random() * status.length);
