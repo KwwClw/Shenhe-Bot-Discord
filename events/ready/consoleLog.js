@@ -1,6 +1,20 @@
 const { ActivityType } = require('discord.js');
+// var datetime = new Date();
+// var formattedDatetime = datetime.toLocaleString();
 var datetime = new Date();
-var formattedDatetime = datetime.toLocaleString();
+var options = { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric', 
+  hour: '2-digit', 
+  minute: '2-digit', 
+  second: '2-digit', 
+  hour12: false,
+  timeZoneName: 'short' 
+};
+
+var thaiDateTimeFormatter = new Intl.DateTimeFormat('th-TH', options);
+var formattedDatetime = thaiDateTimeFormatter.format(datetime);
 
 let status = [
     {
