@@ -1,17 +1,10 @@
-const { Client, Message } = require("discord.js");
+const { Client } = require("discord.js");
 const { DateTime } = require('luxon');
 const Discord = require('discord.js');
 
+const client = new Client();
+
 console.log("working");
-
-Client.on('voiceStateUpdate', (oldState, newState) => {
-    console.log('Voice state update detected:');
-    console.log('Old state:', oldState);
-    console.log('New state:', newState);
-
-    // Rest of your code...
-});
-
 
 module.exports = (client) => {
     client.on('voiceStateUpdate', (oldState, newState) => {
@@ -48,3 +41,5 @@ module.exports = (client) => {
         }
     });
 };
+
+module.exports = client;
