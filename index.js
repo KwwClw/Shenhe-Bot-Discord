@@ -14,6 +14,8 @@ const client = new Client({
     ],
 });
 
+require('./events/ready/voiceStateUpdate');
+
 (async () => {
     try {
         mongoose.set('strictQuery', false);
@@ -24,7 +26,7 @@ const client = new Client({
 
         client.login(process.env.TOKEN);
     } catch (error) {
-        console.log(`Error: ${error}`)
+        console.log(`ERror: ${error}`)
     }
 })();
 
