@@ -29,7 +29,6 @@ client.on('messageCreate', (message) => {
 });
 
 client.on('voiceStateUpdate', (oldState, newState, message) => {
-	console.log("voiceStateUpdate");
     const notificationChannelID = '1094099646525222972';
     const notificationChannel = client.channels.cache.get(notificationChannelID);
     if (!notificationChannel) {
