@@ -12,8 +12,16 @@ module.exports = (client) => {
 
     client.on(eventName, async (arg) => {
       for (const eventFile of eventFiles) {
-        const eventFunction = require(eventFile);
-        await eventFunction(client, arg);
+        try {
+          const eventFunction = require(eventFile);
+          if (typeof eventFunction === 'function') {
+            await eventFunction(client, arg);
+          } else {
+            console.error(`Event file '${eventFile}' does not export a function.`);
+          }
+        } catch (error) {
+          console.error(`Error in event file '${eventFile}': ${error}`);
+        }
       }
     });
   }

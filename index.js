@@ -3,6 +3,7 @@ const { Client, IntentsBitField } = require('discord.js');
 const mongoose = require('mongoose');
 const eventHandler = require('./handlers/eventHandler');
 const keep_alive = require('./keep_alive.js');
+require('./events/voiceStateUpdate');
 
 const client = new Client({
     intents: [
@@ -13,8 +14,6 @@ const client = new Client({
         IntentsBitField.Flags.MessageContent,
     ],
 });
-
-require('./events/ready/voiceStateUpdate');
 
 (async () => {
     try {
