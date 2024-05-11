@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, EmbedBuilder, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField } = require('discord.js');
 const { DateTime } = require('luxon');
 
 const client = new Client({
@@ -13,7 +13,7 @@ const client = new Client({
     ],
 });
 
-client.on('voiceStateUpdate', (oldState, newState, message) => {
+client.on('voiceStateUpdate', (oldState, newState) => {
     const notificationChannelID = '1094099646525222972';
     const notificationChannel = client.channels.cache.get(notificationChannelID);
     if (!notificationChannel) {
@@ -28,24 +28,38 @@ client.on('voiceStateUpdate', (oldState, newState, message) => {
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
 
-    // const leftEmbed = new EmbedBuilder()
-    //     .setColor('#FF0000')
-    //     .setTitle('Left')
-    //     .setDescription(`${member.displayName} has left ${beforeChannel ? beforeChannel.name : 'a voice channel'}.`)
-    //     .setFooter(timestampThai);
+    const joinEmbed = {
+        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
+        title: 'Joined',
+        // description: 'Some description here',
+        fields: [
+            {
+                name: `${member.displayName} has joined ${beforeChannel ? beforeChannel.name : 'a voice channel'}.`,
+                value: timestampThai,
+                inline: false,
+            },
+        ],
+    };
 
-    // const joinEmbed = new EmbedBuilder()
-    //     .setColor('#00FF00')
-    //     .setTitle('Join')
-    //     .setDescription(`${member.displayName} has joined ${afterChannel ? afterChannel.name : 'a voice channel'}.`)
-    //     .setFooter(timestampThai);
+    const leftEmbed = {
+        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
+        title: 'Left',
+        // description: 'Some description here',
+        fields: [
+            {
+                name: `${member.displayName} has left ${beforeChannel ? beforeChannel.name : 'a voice channel'}.`,
+                value: timestampThai,
+                inline: false,
+            },
+        ],
+    };
 
         if (beforeChannel && !afterChannel) {
             // Member left a voice channel
-            notificationChannel.send("leftEmbed");
+            notificationChannel.send({ embeds: [leftEmbed] });
         } else if (!beforeChannel && afterChannel) {
             // Member joined a voice channel
-            notificationChannel.send("joinEmbed");
+            notificationChannel.send({ embeds: [joinEmbed] });
         }
     });
     
