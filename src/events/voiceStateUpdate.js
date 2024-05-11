@@ -25,18 +25,27 @@ client.on('voiceStateUpdate', (oldState, newState, message) => {
     const beforeChannel = oldState.channel;
     const afterChannel = newState.channel;
 
-    const leftEmbed = new EmbedBuilder()
-    .set
-
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
 
+    const leftEmbed = new EmbedBuilder()
+    .setColor('#FF0000')
+    .setTitle('Left')
+    .setDescription(`${member.displayName} has left ${beforeChannel.name}.`)
+    .setFooter(timestampThai);
+
+    const joinEmbed = new EmbedBuilder()
+    .setColor('#00FF00')
+    .setTitle('join')
+    .setDescription(`${member.displayName} has join ${beforeChannel.name}.`)
+    .setFooter(timestampThai);
+
     if (beforeChannel && !afterChannel) {
         // Member left a voice channel
-        notificationChannel.send("leftEmbed");
+        notificationChannel.send({ embeds: [leftEmbed] });
     } else if (!beforeChannel && afterChannel) {
         // Member joined a voice channel
-        notificationChannel.send("joinEmbed");
+        notificationChannel.send({ embeds: [joinEmbed] });
     }
 });
 
