@@ -14,7 +14,7 @@ const client = new Client({
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-    const desiredGuildID = '1092357414482870272';
+    const desiredGuildID = '1092357414482870272'; // guild ID for voice state update
     if (oldState.guild.id !== desiredGuildID || newState.guild.id !== desiredGuildID) {
         return; // Ignore events from other servers
     }
