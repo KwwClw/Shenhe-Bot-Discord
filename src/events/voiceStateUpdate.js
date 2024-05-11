@@ -24,8 +24,8 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const member = newState.member;
     const beforeChannel = oldState.channel;
     const afterChannel = newState.channel;
-    const channelNameBefore = beforeChannel ? client.channels.cache.get(beforeChannel).name : 'a voice channel';
-    const channelNameAfter = afterChannel ? client.channels.cache.get(afterChannel).name : 'a voice channel';
+    const channelNameBefore = beforeChannel ? beforeChannel.name : 'a voice channel';
+    const channelNameAfter = afterChannel ? afterChannel.name : 'a voice channel';
 
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
@@ -74,7 +74,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
         } else if (!beforeChannel && afterChannel) {
             // Member joined a voice channel
             notificationChannel.send({ embeds: [joinEmbed] });
-        } else if (beforeChannel !== afterChannel) {
+        } else if (beforeChannel?.id !== afterChannel?.id) {
             // Channel change detected
             notificationChannel.send({ embeds: [moveEmbed] });
         }
