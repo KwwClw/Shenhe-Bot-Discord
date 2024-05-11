@@ -24,6 +24,8 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const member = newState.member;
     const beforeChannel = oldState.channel;
     const afterChannel = newState.channel;
+    const channelNameBefore = beforeChannel ? client.channels.cache.get(beforeChannel).name : 'a voice channel';
+    const channelNameAfter = afterChannel ? client.channels.cache.get(afterChannel).name : 'a voice channel';
 
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
@@ -34,7 +36,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
         // description: 'Some description here',
         fields: [
             {
-                name: `${member.displayName} has joined ${beforeChannel ? beforeChannel.name : 'a voice channel'}.`,
+                name: `${member.displayName} has joined ${afterChannel ? afterChannel.name : 'a voice channel'}.`,
                 value: timestampThai,
                 inline: false,
             },
@@ -54,13 +56,28 @@ client.on('voiceStateUpdate', (oldState, newState) => {
         ],
     };
 
+    const moveEmbed = {
+        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
+        title: 'Channel Change',
+        fields: [
+            {
+                name: `${member.displayName} has moved from ${channelNameBefore} to ${channelNameAfter}.`,
+                value: timestampThai,
+                inline: false,
+            },
+        ],
+    };
+
         if (beforeChannel && !afterChannel) {
             // Member left a voice channel
             notificationChannel.send({ embeds: [leftEmbed] });
         } else if (!beforeChannel && afterChannel) {
             // Member joined a voice channel
             notificationChannel.send({ embeds: [joinEmbed] });
+        } else if (beforeChannel !== afterChannel) {
+            // Channel change detected
+            notificationChannel.send({ embeds: [moveEmbed] });
         }
     });
     
-    client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);
