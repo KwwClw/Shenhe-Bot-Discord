@@ -29,8 +29,8 @@ const client = new Client({
     }
 })();
 
-// client.on('messageCreate', (message) => {
-//     if (message.content === 'Hey' || message.content === 'hey') {
-//         message.reply('Hi!');
-//     }
-// });
+client.on('messageCreate', (message) => {
+    if (message.content === 'Hey' || message.content === 'hey') {
+        message.reply('Hi!');
+    }
+});

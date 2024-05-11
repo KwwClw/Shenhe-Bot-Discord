@@ -1,15 +1,6 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, IntentsBitField } = require('discord.js');
+const { Client, EmbedBuilder, IntentsBitField } = require('discord.js');
 const { DateTime } = require('luxon');
-
-// const client = new Client({
-//     intents: [
-//         GatewayIntentBits.Guilds,
-//         GatewayIntentBits.GuildMessages,
-//         GatewayIntentBits.MessageContent,
-//         GatewayIntentBits.GuildMembers,
-//     ],
-// });
 
 const client = new Client({
     intents: [
@@ -20,12 +11,6 @@ const client = new Client({
         IntentsBitField.Flags.MessageContent,
 		IntentsBitField.Flags.GuildVoiceStates,
     ],
-});
-
-client.on('messageCreate', (message) => {
-    if (message.content === 'Hey' || message.content === 'hey') {
-        message.reply('Hi!');
-    }
 });
 
 client.on('voiceStateUpdate', (oldState, newState, message) => {
@@ -39,6 +24,9 @@ client.on('voiceStateUpdate', (oldState, newState, message) => {
     const member = newState.member;
     const beforeChannel = oldState.channel;
     const afterChannel = newState.channel;
+
+    const leftEmbed = new EmbedBuilder()
+    .set
 
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
