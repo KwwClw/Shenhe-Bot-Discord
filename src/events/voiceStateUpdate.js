@@ -14,12 +14,12 @@ const client = new Client({
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-    const desiredGuildID = '1092357414482870272'; // guild ID for voice state update
+    const desiredGuildID = process.env.GUILD_ID; // guild ID for voice state update
     if (oldState.guild.id !== desiredGuildID || newState.guild.id !== desiredGuildID) {
         return; // Ignore events from other servers
     }
     // const notificationChannelID = '1184790363337130074';
-    const notificationChannelID = '1094099646525222972';
+    const notificationChannelID = process.env.CHANNEL_ID;
     const notificationChannel = client.channels.cache.get(notificationChannelID);
     if (!notificationChannel) {
         console.error('Error: Notification channel not found');
