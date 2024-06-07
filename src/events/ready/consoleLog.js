@@ -1,13 +1,13 @@
 const { ActivityType } = require('discord.js');
 var datetime = new Date();
 var options = { 
-//   year: 'numeric', 
-//   month: 'long', 
-//   day: 'numeric', 
-//   hour: '2-digit', 
-//   minute: '2-digit', 
-//   second: '2-digit', 
-//   hour12: false,
+  // year: 'numeric', 
+  // month: 'long', 
+  // day: 'numeric', 
+  // hour: '2-digit', 
+  // minute: '2-digit', 
+  // second: '2-digit', 
+  // hour12: false,
   timeZone: 'Asia/Bangkok' // Set the time zone to Thai time
 };
 
