@@ -1,22 +1,7 @@
 var http = require('http');
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080;
 require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
-
-var datetime = new Date();
-
-var options = { 
-    // year: 'numeric', 
-    // month: 'long', 
-    // day: 'numeric', 
-    // hour: '2-digit', 
-    // minute: '2-digit', 
-    // second: '2-digit', 
-    // hour12: false,
-    timeZone: 'Asia/Bangkok' // Set the time zone to Thai time
-};
-
-var formattedDatetime = datetime.toLocaleString('en-EN', options);
 
 const client = new Client({
     intents: [
@@ -28,12 +13,31 @@ const client = new Client({
     ],
 });
 
-http.createServer(function(req, res) {
-    // res.write("I'm alive!\n");
-    res.write(`${client.user.tag} is online.\n${formattedDatetime}`)
+http.createServer((req, res) => {
+    let datetime = new Date();
+
+    let options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit', 
+        hour12: false,
+        timeZone: 'Asia/Bangkok' // Set the time zone to Thai time
+    };
+
+    let formattedDatetime = datetime.toLocaleString('en-EN', options);
+
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    if (client.user) {
+        res.write(`${client.user.tag} is online.\n${formattedDatetime}`);
+    } else {
+        res.write(`Bot is starting...\n${formattedDatetime}`);
+    }
     res.end();
 }).listen(PORT);
 
-console.log("server is online");
+console.log(`Server is online on port ${PORT}`);
 
-client.login(process.env.TOKEN); // Replace with your bot token
+client.login(process.env.TOKEN).catch(console.error); // Replace with your bot token
