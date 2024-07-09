@@ -15,6 +15,8 @@ const client = new Client({
     ],
 });
 
+keep_alive();
+
 (async () => {
     try {
         mongoose.set('strictQuery', false);
