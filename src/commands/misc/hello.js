@@ -17,6 +17,7 @@ module.exports = {
 
         // Get the mentioned user from the interaction
         const mentionedUser = interaction.options.getMentionable('user');
+        const commandUserName = interaction.user.username;
         
         if (mentionedUser) {
             // If the mentionedUser is a member (e.g., in a server, not a DM)
@@ -29,7 +30,7 @@ module.exports = {
                         const memberDisplayName = member.displayName;
                   
                         // Reply to the interaction with the member's display name
-                        await interaction.reply(`You mentioned: ${memberDisplayName}`);
+                        await interaction.reply(`${commandUserName} mentioned: ${memberDisplayName}`);
                     } else {
                         // Handle the case where the member is not found
                         await interaction.reply('Member not found.');

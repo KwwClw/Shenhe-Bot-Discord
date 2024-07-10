@@ -21,7 +21,7 @@ const client = new Client({
 
 function keepAlive() {
     http.createServer(function(req, res) {
-        res.write('res.write(Bot logged in successfully.');
+        res.write(`${client.user.username} is online.\n${formattedDatetime}`);
         res.end();
     }).listen(PORT);
 }
