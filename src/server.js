@@ -20,20 +20,14 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
 
-    function keepAlive() {
-        http.createServer(function(req, res) {
-            res.write(`${client.user.username} is online.\n${formattedDatetime}`);
-            res.end();
-        }).listen(PORT, () => {
-            console.log(`Server is online on port ${PORT}`);
-        });
-    }
-
-    keepAlive();
+    http.createServer(function (req, res) {
+        res.write(`${client.user.username} is online.\n${formattedDatetime}`);
+        res.end();
+    }).listen(PORT, () => {
+        console.log(`Server is online on port ${PORT}`);
+    });
+    
 });
 
 client.login(process.env.TOKEN); // Replace with your bot token
-
-module.exports = keepAlive;
