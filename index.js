@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, IntentsBitField } = require('discord.js');
 const mongoose = require('mongoose');
 const eventHandler = require('./src/handlers/eventHandler.js');
-const keep_alive = require('./src/server.js');
+const server = require('./src/server.js');
 require('./src/events/voiceStateUpdate.js');
 
 const client = new Client({
