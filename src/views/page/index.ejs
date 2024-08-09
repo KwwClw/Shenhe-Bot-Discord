@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shenhe Bot</title>
     <link class="rounded" rel="icon" type="image/x-icon" href="https://i.imgur.com/niKICvu.jpg">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@latest/dist/full.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
@@ -17,14 +18,14 @@
         }
     </style>
 </head>
-<body>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold">Status</h1>
-            <p>Bot Name: <span id="bot-name"><%= info.bot_name %></span></p>
-            <p>Online at: <span id="start-time"><%= info.start_time %></span></p>
-            <div id="ping-status">
-                API ping is <span id="api-ping-value"><%= info.api_ping %></span> ms
+<body class="bg-base-200">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="card bg-base-100 shadow-xl p-6 rounded-lg w-full max-w-md text-center">
+            <h1 class="text-4xl font-bold mb-4">Status</h1>
+            <p class="text-lg mb-2">Bot Name: <span id="bot-name" class="font-semibold"><%= info.bot_name %></span></p>
+            <p class="text-lg mb-4">Online at: <span id="start-time" class="font-semibold"><%= info.start_time %></span></p>
+            <div id="ping-status" class="text-lg font-medium">
+                API ping is <span id="api-ping-value" class="font-semibold"><%= info.api_ping %></span> ms
             </div>
         </div>
     </div>

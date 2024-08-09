@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic QR Code Generator</title>
     <script src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
-    <style>
-        .center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="center">
-        <input id="url-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4" type="text" placeholder="Enter URL" required>
-        <button id="generate-btn" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+
+<body class="bg-base-100">
+    <div class="flex flex-col items-center justify-center h-screen p-4">
+        <input id="url-input" class="input input-bordered w-full max-w-xs mb-4" type="text" placeholder="Enter URL"
+            required>
+        <button id="generate-btn" class="btn btn-primary w-full max-w-xs mb-4">
             Generate QR Code
         </button>
-        <div id="qr-code"></div>
-        <button id="download-btn" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div id="qr-code" class="mb-4"></div>
+        <button id="download-btn" class="btn btn-secondary w-full max-w-xs">
             Download QR Code
         </button>
     </div>
@@ -34,7 +31,6 @@
             data: "",
             dotsOptions: {
                 color: "#000",
-                // type: "rounded"
             },
             backgroundOptions: {
                 color: "#ffffff",
@@ -53,13 +49,43 @@
                 });
                 qrCode.append(document.getElementById("qr-code"));
             } else {
-                alert("Please enter a URL");
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter a URL',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         });
 
         document.getElementById("download-btn").addEventListener("click", () => {
-            qrCode.download({ name: "qr-code", extension: "png" });
+
+            const url = document.getElementById("url-input").value;
+            const qr_code = document.getElementById("qr-code");
+
+            if (qr_code.childElementCount === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please Generate a QR code',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Do you want to Download the QR code?",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, download it!',
+                    cancelButtonText: 'No, cancel!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        qrCode.download({ name: `qr-code ${url}`, extension: "png" });
+                    }
+                });
+            }
         });
     </script>
 </body>
+
 </html>
