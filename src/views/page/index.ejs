@@ -17,18 +17,35 @@
         }
     </style>
 </head>
-
 <body>
-
-    <!-- Your content goes here -->
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="text-center">
             <h1 class="text-3xl font-bold">Status</h1>
-            <%= info.bot_name %> online at<br>
-            <%= info.start_time %>
+            <p>Bot Name: <span id="bot-name"><%= info.bot_name %></span></p>
+            <p>Online at: <span id="start-time"><%= info.start_time %></span></p>
+            <div id="ping-status">
+                Ping is <span id="ping-value"><%= info.ping %></span> ms<br>
+                API ping is <span id="api-ping-value"><%= info.api_ping %></span> ms
+            </div>
         </div>
     </div>
 
-</body>
+    <script>
+        function updatePing() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('bot-name').textContent = data.bot_name;
+                    document.getElementById('ping-value').textContent = data.ping;
+                    document.getElementById('api-ping-value').textContent = data.api_ping;
+                });
+        }
 
+        // Update ping every 5 seconds
+        setInterval(updatePing, 5000);
+
+        // Optionally, update ping immediately on page load
+        updatePing();
+    </script>
+</body>
 </html>

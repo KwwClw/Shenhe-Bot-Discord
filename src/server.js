@@ -15,37 +15,44 @@ const client = new Client({
     ],
 });
 
-const datetime = new Date();
-const options = { timeZone: 'Asia/Bangkok' }; // Set the time zone to Thai time
-const formattedDatetime = datetime.toLocaleString('en-EN', options);
+// Set start time when the bot starts
+const start_time = new Date().toLocaleString('en-EN', { timeZone: 'Asia/Bangkok' });
 
 client.once('ready', () => {
-
-    const info = {
-        start_time: formattedDatetime,
-        bot_name: client.user.username,
-        ping: Date.now() - interaction.createdTimestamp,
-        api_ping: Math.round(client.ws.ping)
-    }
-
     app.set('view engine', 'ejs');
-
     app.set('views', path.join(__dirname, 'views'));
 
-    app.get('/', (req, res) => {
-        res.render('page/index', {
-            info: info
-        })
+    // Endpoint to provide status data in JSON format
+    app.get('/api/status', (req, res) => {
+        const info = {
+            start_time: start_time, // Use the pre-set start_time
+            bot_name: client.user.username,
+            ping: Math.round(client.ws.ping),
+            api_ping: Math.round(client.ws.ping)
+        };
+        res.json(info);
     });
 
+    // Route to render the status page
+    app.get('/', (req, res) => {
+        res.render('page/index', {
+            info: {
+                start_time: start_time, // Use the pre-set start_time
+                bot_name: client.user.username,
+                ping: Math.round(client.ws.ping),
+                api_ping: Math.round(client.ws.ping)
+            }
+        });
+    });
+
+    // Route for QR page
     app.get('/qr', (req, res) => {
-        res.render('page/qr')
+        res.render('page/qr');
     });
 
     app.listen(PORT, () => {
         console.log(`App listening on port ${PORT}`);
     });
-
 });
 
-client.login(process.env.TOKEN); // Replace with your bot token
+client.login(process.env.TOKEN);
