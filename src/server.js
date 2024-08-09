@@ -27,7 +27,6 @@ client.once('ready', () => {
         const info = {
             start_time: start_time, // Use the pre-set start_time
             bot_name: client.user.username,
-            ping: Math.round(client.ws.ping),
             api_ping: Math.round(client.ws.ping)
         };
         res.json(info);
@@ -39,7 +38,6 @@ client.once('ready', () => {
             info: {
                 start_time: start_time, // Use the pre-set start_time
                 bot_name: client.user.username,
-                ping: Math.round(client.ws.ping),
                 api_ping: Math.round(client.ws.ping)
             }
         });
