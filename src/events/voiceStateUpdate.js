@@ -36,8 +36,8 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
 
     const joinEmbed = {
-        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
-        title: 'Joined',
+        color: parseInt('399918', 16), // Convert hexadecimal color to integer
+        title: `${member.displayName} เข้าห้อง`,
         // description: 'Some description here',
         fields: [
             {
@@ -49,8 +49,8 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     };
 
     const leftEmbed = {
-        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
-        title: 'Left',
+        color: parseInt('b8001f', 16), // Convert hexadecimal color to integer
+        title: `${member.displayName} ออกห้อง`,
         // description: 'Some description here',
         fields: [
             {
@@ -63,7 +63,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 
     const moveEmbed = {
         color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
-        title: 'Channel Change',
+        title: `${member.displayName} เปลี่ยนห้อง`,
         fields: [
             {
                 name: `${member.displayName} has moved from ${channelNameBefore} to ${channelNameAfter}.`,
