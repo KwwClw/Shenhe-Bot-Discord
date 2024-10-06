@@ -14,11 +14,11 @@ const client = new Client({
 });
 
 client.on('voiceStateUpdate', (oldState, newState) => {
-    const desiredGuildID = process.env.GUILD_ID; // guild ID for voice state update
+    const desiredGuildID = process.env.GUILD_ID; // Guild ID for voice state update
     if (oldState.guild.id !== desiredGuildID || newState.guild.id !== desiredGuildID) {
         return; // Ignore events from other servers
     }
-    // const notificationChannelID = '1184790363337130074';
+
     const notificationChannelID = process.env.CHANNEL_ID;
     const notificationChannel = client.channels.cache.get(notificationChannelID);
     if (!notificationChannel) {
@@ -33,29 +33,41 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const channelNameAfter = afterChannel ? afterChannel.name : 'a voice channel';
 
     const thaiTimeZone = 'Asia/Bangkok';
-    const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
+    const timestampThai = DateTime.utc().setZone(thaiTimeZone).toFormat('MMMM d, yyyy \'at\' h:mm a');
+    // const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
+
+    // Get member profile information
+    const avatarURL = member.user.displayAvatarURL(); // Get member avatar URL
+    // const roles = member.roles.cache.map(role => role.name).join(', '); // List member roles
+    const roles = member.roles.cache
+        .filter(role => role.name !== '@everyone') // กรอง @everyone ออก
+        .map(role => role.name).join(', '); // List member roles
 
     const joinEmbed = {
-        color: parseInt('399918', 16), // Convert hexadecimal color to integer
+        color: parseInt('248046', 16), // Convert hexadecimal color to integer
         title: `${member.displayName} เข้าห้อง`,
-        // description: 'Some description here',
+        thumbnail: {
+            url: avatarURL, // Member avatar
+        },
         fields: [
             {
-                name: `${member.displayName} has joined ${afterChannel ? afterChannel.name : 'a voice channel'}.`,
-                value: timestampThai,
+                name: `Joined: ${afterChannel ? afterChannel.name : 'a voice channel'}`,
+                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}`,
                 inline: false,
             },
         ],
     };
 
     const leftEmbed = {
-        color: parseInt('b8001f', 16), // Convert hexadecimal color to integer
+        color: parseInt('9C2727', 16), // Convert hexadecimal color to integer
         title: `${member.displayName} ออกห้อง`,
-        // description: 'Some description here',
+        thumbnail: {
+            url: avatarURL, // Member avatar
+        },
         fields: [
             {
-                name: `${member.displayName} has left ${beforeChannel ? beforeChannel.name : 'a voice channel'}.`,
-                value: timestampThai,
+                name: `Left: ${beforeChannel ? beforeChannel.name : 'a voice channel'}`,
+                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}`,
                 inline: false,
             },
         ],
@@ -64,25 +76,29 @@ client.on('voiceStateUpdate', (oldState, newState) => {
     const moveEmbed = {
         color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
         title: `${member.displayName} เปลี่ยนห้อง`,
+        thumbnail: {
+            url: avatarURL, // Member avatar
+        },
         fields: [
             {
-                name: `${member.displayName} has moved from ${channelNameBefore} to ${channelNameAfter}.`,
-                value: timestampThai,
+                name: `Moved from: ${channelNameBefore} to ${channelNameAfter}`,
+                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}`,
                 inline: false,
             },
         ],
     };
 
-        if (beforeChannel && !afterChannel) {
-            // Member left a voice channel
-            notificationChannel.send({ embeds: [leftEmbed] });
-        } else if (!beforeChannel && afterChannel) {
-            // Member joined a voice channel
-            notificationChannel.send({ embeds: [joinEmbed] });
-        } else if (beforeChannel?.id !== afterChannel?.id) {
-            // Channel change detected
-            notificationChannel.send({ embeds: [moveEmbed] });
-        }
-    });
-    
+    if (beforeChannel && !afterChannel) {
+        // Member left a voice channel
+        notificationChannel.send({ embeds: [leftEmbed] });
+    } else if (!beforeChannel && afterChannel) {
+        // Member joined a voice channel
+        notificationChannel.send({ embeds: [joinEmbed] });
+        // console.log(roles);
+    } else if (beforeChannel?.id !== afterChannel?.id) {
+        // Channel change detected
+        notificationChannel.send({ embeds: [moveEmbed] });
+    }
+});
+
 client.login(process.env.TOKEN);
