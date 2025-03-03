@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, IntentsBitField, AuditLogEvent, Events } = require('discord.js');
+const { Client, IntentsBitField } = require('discord.js');
 const { DateTime } = require('luxon');
 
 const client = new Client({
