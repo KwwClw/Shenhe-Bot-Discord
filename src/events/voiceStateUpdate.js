@@ -13,7 +13,7 @@ const client = new Client({
     ],
 });
 
-client.on('voiceStateUpdate', (oldState, newState) => {
+client.on('voiceStateUpdate', async (oldState, newState) => {
     const desiredGuildID = process.env.GUILD_ID; // Guild ID for voice state update
     if (oldState.guild.id !== desiredGuildID || newState.guild.id !== desiredGuildID) {
         return; // Ignore events from other servers
@@ -34,14 +34,12 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toFormat('MMMM d, yyyy \'at\' h:mm a');
-    // const timestampThai = DateTime.utc().setZone(thaiTimeZone).toLocaleString(DateTime.DATETIME_FULL);
 
     // Get member profile information
     const avatarURL = member.user.displayAvatarURL(); // Get member avatar URL
-    // const roles = member.roles.cache.map(role => role.name).join(', '); // List member roles
     const roles = member.roles.cache
         .filter(role => role.name !== '@everyone') // กรอง @everyone ออก
-        .map(role => role.name).join(', '); // List member roles
+        .map(role => role.name).join(', ') || 'No roles'; // List member roles
 
     const joinEmbed = {
         color: parseInt('248046', 16), // Convert hexadecimal color to integer
@@ -73,16 +71,31 @@ client.on('voiceStateUpdate', (oldState, newState) => {
         ],
     };
 
+    // const moveEmbed = {
+    //     color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
+    //     title: `${member.displayName} เปลี่ยนห้อง`,
+    //     thumbnail: {
+    //         url: avatarURL, // Member avatar
+    //     },
+    //     fields: [
+    //         {
+    //             name: `Moved from: ${channelNameBefore} to ${channelNameAfter}`,
+    //             value: `**Time**: ${timestampThai}\n**Roles**: ${roles}\n**Moved by**: ${movedBy}`,
+    //             inline: false,
+    //         },
+    //     ],
+    // };
+
     const moveEmbed = {
-        color: parseInt('0099ff', 16), // Convert hexadecimal color to integer
+        color: parseInt('0099ff', 16),
         title: `${member.displayName} เปลี่ยนห้อง`,
         thumbnail: {
-            url: avatarURL, // Member avatar
+            url: avatarURL,
         },
         fields: [
             {
                 name: `Moved from: ${channelNameBefore} to ${channelNameAfter}`,
-                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}`,
+                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}\n**Moved by**: ${movedBy}`,
                 inline: false,
             },
         ],
@@ -95,10 +108,24 @@ client.on('voiceStateUpdate', (oldState, newState) => {
         // Member joined a voice channel
         notificationChannel.send({ embeds: [joinEmbed] });
         // console.log(roles);
-    } else if (beforeChannel?.id !== afterChannel?.id) {
-        // Channel change detected
+    // } else if (beforeChannel?.id !== afterChannel?.id) {
+    //     // Channel change detected
+    //     notificationChannel.send({ embeds: [moveEmbed] });
+    } else if (beforeChannel && afterChannel && beforeChannel?.id !== afterChannel?.id) {
+        // ตรวจสอบ Audit Logs ว่าใครเป็นคนย้ายห้อง
+        const logs = await newState.guild.fetchAuditLogs({
+            type: 24, // 24 = MEMBER_MOVE
+            limit: 1
+        });
+        const logEntry = logs.entries.first();
+
+        let movedBy = "ตัวเอง"; // ค่าเริ่มต้นเป็นย้ายตัวเอง
+        if (logEntry && logEntry.target.id === member.id && logEntry.createdTimestamp > Date.now() - 5000) {
+            movedBy = `ถูกย้ายโดย ${logEntry.executor.tag}`;
+        };
+
         notificationChannel.send({ embeds: [moveEmbed] });
-    }
+    };
 });
 
 client.login(process.env.TOKEN);
