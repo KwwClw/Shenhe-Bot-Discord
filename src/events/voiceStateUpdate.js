@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField, AuditLogEvent, Events } = require('discord.js');
 const { DateTime } = require('luxon');
 
 const client = new Client({
@@ -14,8 +14,10 @@ const client = new Client({
 });
 
 client.on('voiceStateUpdate', async (oldState, newState) => {
-    const desiredGuildID = process.env.GUILD_ID; // Guild ID for voice state update
-    if (oldState.guild.id !== desiredGuildID || newState.guild.id !== desiredGuildID) {
+    const guild = newState.guild; // ดึง guild object
+    
+    const desiredGuildID = process.env.GUILD_ID;
+    if (guild.id !== desiredGuildID) {
         return; // Ignore events from other servers
     }
 
@@ -35,11 +37,36 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
     const thaiTimeZone = 'Asia/Bangkok';
     const timestampThai = DateTime.utc().setZone(thaiTimeZone).toFormat('MMMM d, yyyy \'at\' h:mm a');
 
-    // Get member profile information
-    const avatarURL = member.user.displayAvatarURL(); // Get member avatar URL
-    const roles = member.roles.cache
-        .filter(role => role.name !== '@everyone') // กรอง @everyone ออก
-        .map(role => role.name).join(', ') || 'No roles'; // List member roles
+    const avatarURL = member.user.displayAvatarURL();
+    const roles = member.roles.cache.filter(role => role.name !== '@everyone').map(role => role.name).join(', ') || 'No roles';
+
+    // ดึงข้อมูลจาก Audit Logs
+    const auditLogs = await guild.fetchAuditLogs({ type: 24, limit: 10 });
+    const logEntry = auditLogs.entries.find(entry => 
+        entry.target.id === member.id && entry.createdTimestamp > Date.now() - 30000 // ตรวจสอบภายใน 30 วินาที
+    );
+
+    let movedBy = "ตัวเอง"; 
+
+    if (logEntry) {
+        movedBy = `ถูกย้ายโดย ${logEntry.executor.tag}`;
+    } else if (beforeChannel && afterChannel) {
+        movedBy = `เปลี่ยนเอง`; // เพิ่มเงื่อนไขให้ชัดเจนขึ้น
+    }
+    
+    // console.log("Audit Log Entries:", auditLogs.entries.map(e => ({
+    //     target: e.target.id,
+    //     executor: e.executor.tag,
+    //     createdAt: e.createdTimestamp
+    // })));
+    
+    // console.log("Selected Log Entry:", logEntry ? {
+    //     target: logEntry.target.id,
+    //     executor: logEntry.executor.tag,
+    //     createdAt: logEntry.createdTimestamp
+    // } : "No matching log found");
+
+    console.log("Audit Log Entries:", auditLogs.entries);
 
     const joinEmbed = {
         color: parseInt('248046', 16), // Convert hexadecimal color to integer
@@ -95,7 +122,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
         fields: [
             {
                 name: `Moved from: ${channelNameBefore} to ${channelNameAfter}`,
-                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}\n**Moved by**: ${movedBy}`,
+                value: `**Time**: ${timestampThai}\n**Roles**: ${roles}\n**Moved by**: รอแก้บัคก่อนนะครับ`,
                 inline: false,
             },
         ],
@@ -108,22 +135,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
         // Member joined a voice channel
         notificationChannel.send({ embeds: [joinEmbed] });
         // console.log(roles);
-    // } else if (beforeChannel?.id !== afterChannel?.id) {
-    //     // Channel change detected
-    //     notificationChannel.send({ embeds: [moveEmbed] });
     } else if (beforeChannel && afterChannel && beforeChannel?.id !== afterChannel?.id) {
-        // ตรวจสอบ Audit Logs ว่าใครเป็นคนย้ายห้อง
-        const logs = await newState.guild.fetchAuditLogs({
-            type: 24, // 24 = MEMBER_MOVE
-            limit: 1
-        });
-        const logEntry = logs.entries.first();
-
-        let movedBy = "ตัวเอง"; // ค่าเริ่มต้นเป็นย้ายตัวเอง
-        if (logEntry && logEntry.target.id === member.id && logEntry.createdTimestamp > Date.now() - 5000) {
-            movedBy = `ถูกย้ายโดย ${logEntry.executor.tag}`;
-        };
-
         notificationChannel.send({ embeds: [moveEmbed] });
     };
 });
