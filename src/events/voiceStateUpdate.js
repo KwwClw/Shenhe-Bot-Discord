@@ -66,7 +66,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
     //     createdAt: logEntry.createdTimestamp
     // } : "No matching log found");
 
-    console.log("Audit Log Entries:", auditLogs.entries);
+    // console.log("Audit Log Entries:", auditLogs.entries);
 
     const joinEmbed = {
         color: parseInt('248046', 16), // Convert hexadecimal color to integer
